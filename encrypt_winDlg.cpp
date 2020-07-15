@@ -2,14 +2,14 @@
 //
 
 /*
-openssl ±àÒë
+openssl ç¼–è¯‘
 perl Configure VC-WIN32 no-asm  -DOPENSSL_USE_IPV6=0 --prefix=c:\openssl\ 
 ms\do_ms 
 nmake -f ms\nt.mak 
 nmake -f ms\nt.mak install 
 
-¹¤¾ß -> Ñ¡Ïî -> Ä¿Â¼    ÏÂÀ­ Libray files  Ìí¼Ó C:\openssl\lib
-¹¤¾ß -> Ñ¡Ïî -> Ä¿Â¼    ÏÂÀ­ Include files Ìí¼Ó C:\openssl\include
+å·¥å…· -> é€‰é¡¹ -> ç›®å½•    ä¸‹æ‹‰ Libray files  æ·»åŠ  C:\openssl\lib
+å·¥å…· -> é€‰é¡¹ -> ç›®å½•    ä¸‹æ‹‰ Include files æ·»åŠ  C:\openssl\include
 */
 
 #include "stdafx.h"
@@ -33,8 +33,8 @@ nmake -f ms\nt.mak install
 
 #define PASSWORD_PADDING 2048
 
-#define EN_DIR "._ÒÑ¼ÓÃÜ"
-#define DE_DIR "._ÒÑ½âÃÜ"
+#define EN_DIR "._å·²åŠ å¯†"
+#define DE_DIR "._å·²è§£å¯†"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -156,11 +156,11 @@ BOOL CEncrypt_winDlg::OnInitDialog()
 	DWORD styles = m_file_list.GetExtendedStyle();
 	m_file_list.SetExtendedStyle(styles|LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
 	
-	m_file_list.InsertColumn(0,"ÎÄ¼þÐòºÅ",LVCFMT_LEFT,60); 
-	m_file_list.InsertColumn(1,"ÎÄ¼þÃû",LVCFMT_LEFT,150); 
-	m_file_list.InsertColumn(2,"²Ù×÷½á¹û",LVCFMT_CENTER,60);
-	m_file_list.InsertColumn(3,"Ð£Ñé½á¹û",LVCFMT_CENTER,60);
-	m_file_list.InsertColumn(4,"ÐÅÏ¢",LVCFMT_LEFT,120);
+	m_file_list.InsertColumn(0,"æ–‡ä»¶åºå·",LVCFMT_LEFT,60); 
+	m_file_list.InsertColumn(1,"æ–‡ä»¶å",LVCFMT_LEFT,150); 
+	m_file_list.InsertColumn(2,"æ“ä½œç»“æžœ",LVCFMT_CENTER,60);
+	m_file_list.InsertColumn(3,"æ ¡éªŒç»“æžœ",LVCFMT_CENTER,60);
+	m_file_list.InsertColumn(4,"ä¿¡æ¯",LVCFMT_LEFT,120);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -253,8 +253,8 @@ void CEncrypt_winDlg::encrypt()
 	unsigned char md5_string[MD5_DIGEST_LENGTH*2+4], sha256_string[32*2+4];
 	unsigned char buffer[4096];
 	unsigned char out_buffer[4096];
-	//ÒÑ·ÅÔÚ¶ÁÎÄ¼þÀï´¦Àí
-	//unsigned char out_buffer[4096 + EVP_MAX_BLOCK_LENGTH ]; //Îª·ÀÖ¹Ä©Î²pkcs#7Ìî³ä16Byte µ¼ÖÂÒç³ö µ±È»Ò²¿ÉÒÔÊÇ AES_BLOCK_SIZE£¬µ«Í¨ÓÃenvÖÐÒ»°ãÓÃ EVP_MAX_BLOCK_LENGTH
+	//å·²æ”¾åœ¨è¯»æ–‡ä»¶é‡Œå¤„ç†
+	//unsigned char out_buffer[4096 + EVP_MAX_BLOCK_LENGTH ]; //ä¸ºé˜²æ­¢æœ«å°¾pkcs#7å¡«å……16Byte å¯¼è‡´æº¢å‡º å½“ç„¶ä¹Ÿå¯ä»¥æ˜¯ AES_BLOCK_SIZEï¼Œä½†é€šç”¨envä¸­ä¸€èˆ¬ç”¨ EVP_MAX_BLOCK_LENGTH
 
 	SHA256_CTX sha256_ctx;
 	
@@ -264,7 +264,7 @@ void CEncrypt_winDlg::encrypt()
 	GetDlgItemText(IDC_PASSWORD,temp);
 	
 	if(temp.GetLength()==0){
-		AfxMessageBox("ÃÜÂë²»ÄÜÎª¿Õ");
+		AfxMessageBox("å¯†ç ä¸èƒ½ä¸ºç©º");
 		return;
 	}
 	
@@ -288,7 +288,7 @@ void CEncrypt_winDlg::encrypt()
 	//hex_dump(key,KEY_LEN,sha256_string);
 	//AfxMessageBox((char *)sha256_string);
 
-	//´´½¨Êä³öÎÄ¼þ¼Ð
+	//åˆ›å»ºè¾“å‡ºæ–‡ä»¶å¤¹
 	if(m_AryFilename.GetSize()>0){
 		temp = m_AryFilename.GetAt(0);
 		length = temp.GetLength();
@@ -296,21 +296,21 @@ void CEncrypt_winDlg::encrypt()
 		{
 			if( '\\' == temp.GetAt(i))
 			{
-				//ÅÐ¶Ïµ±Ç°×Ö·ûÊÇ·ñÊÇ'\'
+				//åˆ¤æ–­å½“å‰å­—ç¬¦æ˜¯å¦æ˜¯'\'
 				temp = temp.Left( i ) + "\\"+EN_DIR+"\\";
 				temp.Replace("\\","\\\\");
 				path_length = sprintf(file_aes,"%s",temp.GetBuffer(0));
 				mkdir(temp.GetBuffer(0));
 				
-				break;//Ìø³öÑ­»·
+				break;//è·³å‡ºå¾ªçŽ¯
 			}
 		}
 	}else{
-		AfxMessageBox("Î´Ñ¡ÔñÎÄ¼þ");
+		AfxMessageBox("æœªé€‰æ‹©æ–‡ä»¶");
 		return;
 	}
 
-	//¼ÓÃÜ¿ªÊ¼
+	//åŠ å¯†å¼€å§‹
 	GetDlgItem(IDC_ENC_BTN)->EnableWindow(FALSE);
 	GetDlgItem(IDC_DEC_BTN)->EnableWindow(FALSE);
 
@@ -319,21 +319,21 @@ void CEncrypt_winDlg::encrypt()
 	//EVP_CipherInit_ex(env_ctx, EVP_aes_256_cbc(), NULL, key, iv, AES_ENCRYPT);
 	for(i=0;i<m_AryFilename.GetSize();i++)
 	{	
-		m_file_list.SetItemText(i,4,"¼ÓÃÜÖÐ...");
+		m_file_list.SetItemText(i,4,"åŠ å¯†ä¸­...");
 		temp = m_AryFilename.GetAt(i);
 		temp.Replace("\\","\\\\");
 
 		_snprintf(file_name,sizeof(file_name),"%s",temp.GetBuffer(0));
 		fpr = fopen(file_name,"rb");
 		if(fpr == NULL){
-			m_file_list.SetItemText(i,4,"Ô­ÎÄ¼þ´ò¿ªÊ§°Ü");
+			m_file_list.SetItemText(i,4,"åŽŸæ–‡ä»¶æ‰“å¼€å¤±è´¥");
 			continue;
 		}
 		temp = m_AryFiletitle.GetAt(i);
 		memcpy(file_aes+path_length,temp.GetBuffer(0),temp.GetLength()+1);
 		fpw = fopen(file_aes,"wb");
 		if(fpw == NULL){
-			m_file_list.SetItemText(i,4,"´´½¨¼ÓÃÜÎÄ¼þÊ§°Ü");
+			m_file_list.SetItemText(i,4,"åˆ›å»ºåŠ å¯†æ–‡ä»¶å¤±è´¥");
 			fclose(fpr);
 			continue;
 		}
@@ -348,7 +348,7 @@ void CEncrypt_winDlg::encrypt()
 			MD5_Update(&md5_ctx, buffer, length);
 			
 			//EVP_MAX_BLOCK_LENGTH
-			//EVP_CIPHER_CTX_set_padding Ä¬ÈÏÊÇpkcs#7ËùÒÔ²»ÓÃÉèÖÃÁË
+			//EVP_CIPHER_CTX_set_padding é»˜è®¤æ˜¯pkcs#7æ‰€ä»¥ä¸ç”¨è®¾ç½®äº†
 			EVP_CipherUpdate(env_ctx, out_buffer, &n, buffer, length);
 				
 			MD5_Update(&out_md5_ctx, out_buffer, n);
@@ -367,11 +367,11 @@ void CEncrypt_winDlg::encrypt()
 		//temp.Format("%s",md5_string);
 		//m_file_list.SetItemText(i,4,temp); //openssl dgst -md5  ReadMe.txt
 
-		//È¡Ô´ÎÄ¼þµÄmd5Ç°8¸ö
+		//å–æºæ–‡ä»¶çš„md5å‰8ä¸ª
 		memset(extend,0,sizeof(extend));
 		memcpy(extend,md5_string,8);
 
-		//È¡Êä³öÎÄ¼þmd5µÄÇ°8¸ö
+		//å–è¾“å‡ºæ–‡ä»¶md5çš„å‰8ä¸ª
 		MD5_Final(out_md5, &out_md5_ctx);
 		hex_dump(out_md5,MD5_DIGEST_LENGTH,md5_string);
 		
@@ -380,8 +380,8 @@ void CEncrypt_winDlg::encrypt()
 		
 		fclose(fpr);
 		fclose(fpw);
-		m_file_list.SetItemText(i,2,"¼ÓÃÜÍê³É");
-		m_file_list.SetItemText(i,4,"Ð£ÑéÖÐ...");
+		m_file_list.SetItemText(i,2,"åŠ å¯†å®Œæˆ");
+		m_file_list.SetItemText(i,4,"æ ¡éªŒä¸­...");
 		//check 
 		fpr = fopen(file_aes,"rb");
 		MD5_Init(&md5_ctx);
@@ -402,17 +402,17 @@ void CEncrypt_winDlg::encrypt()
 		MD5_Update(&md5_ctx, out_buffer, n);
 		MD5_Final(md5, &md5_ctx);
 		if(0==memcmp(md5,orignal_md5,MD5_DIGEST_LENGTH)){
-			m_file_list.SetItemText(i,3,"³É¹¦");
+			m_file_list.SetItemText(i,3,"æˆåŠŸ");
 			sprintf((char *)buffer,"%s.%s",file_aes,extend);
 			unlink((char *)buffer);
 			rename(file_aes,(char *)buffer);
 			
 		}else{
 			hex_dump(md5,MD5_DIGEST_LENGTH,md5_string);
-			temp.Format("Ê§°Ü%s",md5_string);
+			temp.Format("å¤±è´¥%s",md5_string);
 			m_file_list.SetItemText(i,3,temp);
 		}
-		m_file_list.SetItemText(i,4,"´¦ÀíÍê±Ï");
+		m_file_list.SetItemText(i,4,"å¤„ç†å®Œæ¯•");
 	}
 	m_AryFilename.RemoveAll();
 	m_AryFiletitle.RemoveAll();
@@ -427,10 +427,10 @@ void CEncrypt_winDlg::OnFileBtn()
 	CString  temp;
 	int      i,j;
 	CFileDialog fdlg(true, "*", "*.*", OFN_ALLOWMULTISELECT | OFN_ENABLESIZING | OFN_HIDEREADONLY,
-		"ËùÓÐÎÄ¼þ(*.*)|*.*||", NULL);	
-	fdlg.m_ofn.lpstrTitle="ÇëÑ¡ÔñÐèÒª¼ÓÃÜ/½âÃÜµÄÎÄ¼þ";
+		"æ‰€æœ‰æ–‡ä»¶(*.*)|*.*||", NULL);	
+	fdlg.m_ofn.lpstrTitle="è¯·é€‰æ‹©éœ€è¦åŠ å¯†/è§£å¯†çš„æ–‡ä»¶";
 	
-	//×î¶à¿ÉÒÔ´ò¿ª1000¸öÎÄ¼þ
+	//æœ€å¤šå¯ä»¥æ‰“å¼€1000ä¸ªæ–‡ä»¶
 	fdlg.m_ofn.nMaxFile = 1000 * MAX_PATH;
 	fdlg.m_ofn.lpstrFile = new TCHAR[fdlg.m_ofn.nMaxFile];
 	ZeroMemory(fdlg.m_ofn.lpstrFile, sizeof(TCHAR) * fdlg.m_ofn.nMaxFile); 
@@ -453,9 +453,9 @@ void CEncrypt_winDlg::OnFileBtn()
 			{
 				if( '\\' == pathName.GetAt(j))
 				{
-					//ÅÐ¶Ïµ±Ç°×Ö·ûÊÇ·ñÊÇ'\'
+					//åˆ¤æ–­å½“å‰å­—ç¬¦æ˜¯å¦æ˜¯'\'
 					fileName = pathName.Right(length - j -1);
-					break;//Ìø³öÑ­»·
+					break;//è·³å‡ºå¾ªçŽ¯
 				}
 			}
 			//AfxMessageBox(pathName);
@@ -469,9 +469,10 @@ void CEncrypt_winDlg::OnFileBtn()
 			m_AryFiletitle.Add(fileName);
 		}
 		if(i>1000){
-			AfxMessageBox("Ö»ÄÜ´¦Àí1000¸öÎÄ¼þ");
+			AfxMessageBox("åªèƒ½å¤„ç†1000ä¸ªæ–‡ä»¶");
 		}
 	}
+	delete []fdlg.m_ofn.lpstrFile;
 }
 
 void CEncrypt_winDlg::OnDecBtn() 
@@ -508,12 +509,12 @@ void CEncrypt_winDlg::decrypt()
 
 	
 
-	//´´½¨ÃÜÂë
+	//åˆ›å»ºå¯†ç 
 
 	GetDlgItemText(IDC_PASSWORD,temp);
 	
 	if(temp.GetLength()==0){
-		AfxMessageBox("ÃÜÂë²»ÄÜÎª¿Õ");
+		AfxMessageBox("å¯†ç ä¸èƒ½ä¸ºç©º");
 		return;
 	}
 	length = temp.GetLength();
@@ -535,7 +536,7 @@ void CEncrypt_winDlg::decrypt()
 	//AfxMessageBox((char *)sha256_string);
 
 
-	//´´½¨Êä³öÎÄ¼þ¼Ð
+	//åˆ›å»ºè¾“å‡ºæ–‡ä»¶å¤¹
 	if(m_AryFilename.GetSize()>0){
 		temp = m_AryFilename.GetAt(0);
 		length = temp.GetLength();
@@ -543,35 +544,35 @@ void CEncrypt_winDlg::decrypt()
 		{
 			if( '\\' == temp.GetAt(i))
 			{
-				//ÅÐ¶Ïµ±Ç°×Ö·ûÊÇ·ñÊÇ'\'
+				//åˆ¤æ–­å½“å‰å­—ç¬¦æ˜¯å¦æ˜¯'\'
 				temp = temp.Left( i ) + "\\"+DE_DIR+"\\";
 				temp.Replace("\\","\\\\");
 				path_length = sprintf(file_name,"%s",temp.GetBuffer(0));
 				mkdir(temp.GetBuffer(0));
 				
-				break;//Ìø³öÑ­»·
+				break;//è·³å‡ºå¾ªçŽ¯
 			}
 		}
 	}else{
-		AfxMessageBox("Î´Ñ¡ÔñÎÄ¼þ");
+		AfxMessageBox("æœªé€‰æ‹©æ–‡ä»¶");
 		return;
 	}
 
-	//½âÃÜ¿ªÊ¼
+	//è§£å¯†å¼€å§‹
 	GetDlgItem(IDC_ENC_BTN)->EnableWindow(FALSE);
 	GetDlgItem(IDC_DEC_BTN)->EnableWindow(FALSE);
 	
 	EVP_CIPHER_CTX *env_ctx;
 	for(i=0;i<m_AryFilename.GetSize();i++)
 	{	
-		m_file_list.SetItemText(i,4,"½âÃÜÖÐ...");
+		m_file_list.SetItemText(i,4,"è§£å¯†ä¸­...");
 		temp = m_AryFilename.GetAt(i);
 		temp.Replace("\\","\\\\");
 		
 		_snprintf(file_aes,sizeof(file_aes),"%s",temp.GetBuffer(0));
 		fpr = fopen(file_aes,"rb");
 		if(fpr == NULL){
-			m_file_list.SetItemText(i,4,"Ô­ÎÄ¼þ´ò¿ªÊ§°Ü");
+			m_file_list.SetItemText(i,4,"åŽŸæ–‡ä»¶æ‰“å¼€å¤±è´¥");
 			continue;
 		}
 		
@@ -580,7 +581,7 @@ void CEncrypt_winDlg::decrypt()
 		memcpy(file_name+path_length,temp.GetBuffer(0),length-24+1);
 		fpw = fopen(file_name,"wb");
 		if(fpw == NULL){
-			m_file_list.SetItemText(i,4,"´´½¨½âÃÜÎÄ¼þÊ§°Ü");
+			m_file_list.SetItemText(i,4,"åˆ›å»ºè§£å¯†æ–‡ä»¶å¤±è´¥");
 			fclose(fpr);
 			continue;
 		}
@@ -621,21 +622,21 @@ void CEncrypt_winDlg::decrypt()
 		memcpy(buffer+16,temp.GetBuffer(0),16);
 		
 		
-		m_file_list.SetItemText(i,2,"½âÃÜÍê³É");
+		m_file_list.SetItemText(i,2,"è§£å¯†å®Œæˆ");
 		
 		//check 
 		if(0==memcmp(buffer,buffer+16,16)){
-			m_file_list.SetItemText(i,3,"³É¹¦");
+			m_file_list.SetItemText(i,3,"æˆåŠŸ");
 		}else if(0 != memcmp(buffer+8,buffer+16+8,8)){
-			m_file_list.SetItemText(i,3,"ÎÄ¼þËð»µ");
+			m_file_list.SetItemText(i,3,"æ–‡ä»¶æŸå");
 		}else if(0!=memcmp(buffer,buffer+16,8)){
-			m_file_list.SetItemText(i,3,"ÃÜÂë´íÎó");
+			m_file_list.SetItemText(i,3,"å¯†ç é”™è¯¯");
 		}else{
 			buffer[16] = '\0'; 
-			temp.Format("Ê§°Ü%s",buffer);
+			temp.Format("å¤±è´¥%s",buffer);
 			m_file_list.SetItemText(i,3,temp);
 		}
-		m_file_list.SetItemText(i,4,"´¦ÀíÍê±Ï");
+		m_file_list.SetItemText(i,4,"å¤„ç†å®Œæ¯•");
 	}
 
 	m_AryFilename.RemoveAll();
